@@ -1,0 +1,10 @@
+# temporary files
+*~
+*.swp
+
+# povray state file
+*.pov-state
+
+# only allow images inside textures
+*.png
+!*/textures/*.png
