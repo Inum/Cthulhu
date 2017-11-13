@@ -31,17 +31,28 @@
             scale 1
             rotate <0,0,0>
             translate < 0, 0, 0>}
-            
+            merge{
             sphere{<0,0,0>, 0.2 //eyes
                     texture{pigment{White}
                     finish {phong 1}}
                     scale<1,1.5,1> //elliptic
                     translate<-0.45, 1.2, -0.5 >}
+                         sphere{<0,0,0>, 0.1 //pupils
+                            texture{pigment{Black}
+                            finish {phong 1}}
+                            scale<1,1.5,1> //elliptic
+                            translate<-0.6, 1.2, -0.5 >}}
+            merge{
             sphere{<0,0,0>, 0.2
                     texture{pigment{White}
                     finish {phong 1}}
                     scale<1,1.5,1> 
                     translate<-0.45, 1.2, 0.5 >}
+                        sphere{<0,0,0>, 0.1 //pupils
+                            texture{pigment{Black}
+                            finish {phong 1}}
+                            scale<1,1.5,1> //elliptic
+                            translate<-0.6, 1.2, 0.5 >}}
             cone{<0,0,0>, 0.5, <-2,0,0>, 0.2 //beak
                  texture{ pigment{Orange}
                  finish{phong 1}}
