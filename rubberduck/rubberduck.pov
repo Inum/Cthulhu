@@ -5,6 +5,7 @@
   camera {
     location <0, 3, 10>
     look_at  <0, 2,  2>
+    rotate <0,clock*360,0>
   }
   
 
@@ -26,7 +27,7 @@ merge{
                 0.90, // >0, vertical center distance
                 0.85, // >0, upper radius
                 0.30, // >0, lower radius
-                0.90, //>2*border radius, length in z-                
+                0.30, //>2*border radius, length in z-                
                 // max. = min(lower radius, upper radius)!
                 0) // Merge_On: 0 or 1
                  // ------------------------------------
@@ -41,7 +42,7 @@ merge{
                 0.90, // >0, vertical center distance
                 0.85, // >0, upper radius
                 0.30, // >0, lower radius
-                0.90, //>2*border radius, length in z- 
+                0.30, //>2*border radius, length in z- 
                 0) // Merge_On: 0 or 1
                  // ------------------------------------
                 texture{ pigment{Yellow}
@@ -105,6 +106,9 @@ merge{
             translate<-1.5,0.6,0>
             rotate<0,180,0>}}
             
-object {duck translate < 1.0, 0, 0> rotate < 0,360*clock,0>}
+object {duck }//translate < 1.0, 0, 0> rotate < 0,360*clock,0>}
   
-light_source { <2, 4, -3> color White} 
+light_source{ <2,1,0> color rgb <1,1,1>
+              parallel
+              point_at<1, 0, 0> 
+            } 
