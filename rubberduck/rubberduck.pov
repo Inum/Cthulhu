@@ -3,7 +3,7 @@
 #include "shapes3.inc"
 
   camera {
-    location <0, 2, 10>
+    location <0, 3, 10>
     look_at  <0, 2,  2>
   }
   
@@ -37,7 +37,7 @@ merge{
                 rotate <0,0,270>
                 translate < -1, 0.3, 1.1>
                 } 
-                 object{ Round_Conic_Torus( //wings
+            object{ Round_Conic_Torus( //wings
                 0.90, // >0, vertical center distance
                 0.85, // >0, upper radius
                 0.30, // >0, lower radius
@@ -51,6 +51,14 @@ merge{
                 rotate <0,0,270>
                 translate < -1, 0.3, -1.1>
                 } 
+            object{ Egg_Shape( 1.0, 2.2) //tail
+                texture{
+                    pigment{ Yellow}
+                    finish { phong 1 }
+                } // end of texture
+                rotate < 0, 0, 25>
+                translate < -0.7, -0.4, 0>
+} // end of object 
       }
   
 #declare duckhead =
