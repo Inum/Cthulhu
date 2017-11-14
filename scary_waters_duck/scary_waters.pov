@@ -71,4 +71,23 @@ fog{fog_type   3   distance 250  color rgb<0.5,0.5,0.5>
         rotate< 5*sin(step), -60, 5*cos(step)> 
         translate <0.08+0.01*cos(step), 0, 0> }
 
+//Tentacle
+#declare pt = 0;
+#declare r = 0;
+
+#declare tentacle = sphere_sweep{
+cubic_spline
+14, 
+ #while(pt<14)
+ <5*cos(pt+clock)+5*5*cos(pt*0.1), pt*10, 5*sin(pt+clock)+5*5*sin(pt*0.1)>, r
+ #declare r = r+0.2;
+ #declare pt = pt+1;
+ #end
+   texture{Jade}
+   normal{bumps 0.3}
+    }
+    
+object{tentacle
+scale 0.05
+        translate <0.08+0.01*cos(step), 0, 0> }
 
