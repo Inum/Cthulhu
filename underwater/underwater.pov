@@ -6,6 +6,8 @@
 #include "rubberduck.inc"
 
 
+global_settings {  assumed_gamma 1.0 
+		   }
 // above=+1 or below=-1 water surface
 #declare ViewPoint= -1;
 #local step=2 * pi * clock / final_clock;
