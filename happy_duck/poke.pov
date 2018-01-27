@@ -15,7 +15,7 @@ global_settings{ assumed_gamma 1.0 }
 #local progress=clock/final_clock;
 #local step=2 * pi * progress;
 
-#local start_fade=final_clock*0.1;
+#local start_fade=final_clock*0.2;
 #local end_fade=final_clock*0.7;
 #local storm_arrived = final_clock*0.85;
 
@@ -51,19 +51,20 @@ global_settings{ assumed_gamma 1.0 }
 
 
 //---------------------- end of camera 
-#if (clock < end_fade)
+//#if (clock < end_fade)
+//    camera{Cam0}
+//#end
+//#if (clock >= end_fade & clock < storm_arrived)
+//    camera{Cam0}
+//#end
+//#if (clock >= storm_arrived)
+//    camera{Cam0}
+//#end
+//#if (clock >= start_fade & clock < storm_arrived)
+//    camera{Cam0}
+//    //fog{distance 10 color rgbt <0.2,0.2,0.2,0.1> fog_offset 0.0 fog_alt 1 turbulence 0.05}
+//#end
     camera{Cam0}
-#end
-#if (clock >= end_fade & clock < storm_arrived)
-    camera{Cam0}
-#end
-#if (clock >= storm_arrived)
-    camera{Cam0}
-#end
-#if (clock >= start_fade & clock < storm_arrived)
-    camera{Cam0}
-    //fog{distance 10 color rgbt <0.2,0.2,0.2,0.1> fog_offset 0.0 fog_alt 1 turbulence 0.05}
-#end
 
 //---------------------------------------
 light_source{ <1500,2500,-2500>
@@ -260,9 +261,9 @@ plane {y, 0
             }
 
 
-#if (clock < end_fade)
+#if (clock > start_fade & clock < end_fade)
     plane {y, 100
-        texture{pigment{rgbt <0.0,0.0,0.0,1 - 0.6 * fade(clock,start_fade,end_fade)>}}}
+        texture{pigment{rgbt <0.0,0.0,0.0,1 - 0.6 * parab(clock,start_fade,storm_arrived)>}}}
 #end
 
         
