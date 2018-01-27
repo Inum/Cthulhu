@@ -1,0 +1,954 @@
+******************************************************************************************
+                             ___ _     _    __  __
+                            | _ ) |___| |__|  \/  |__ _ _ _    
+                            | _ \ / _ \ '_ \ |\/| / _` | ' \ v4.1
+                            |___/_\___/_.__/_|  |_\__,_|_||_|
+                                | _ \___ ___ _ __| |___
+                                |  _/ -_) _ \ '_ \ / -_)
+                                |_| \___\___/ .__/_\___|
+                                            |_|
+                            
+                            Humanoid figures for POV-Ray v3.1 
+    
+                             by Peter Houston 1999, 2000
+
+******************************************************************************************
+  IMPORTANT NOTE : This version is not compatitble with Pose or CDF files before v4.0, also
+                   all of the macro's have been renamed and reformatted.
+                   I apologise if this causes some confusion but the changes were necessary
+                   to allow the improvements in this latest release.
+
+     The latest version of the package is avilable from my website (see section 9.0) 
+******************************************************************************************
+(*) Changes since last version.
+
+ 0.0  INTRODUCTION
+ 1.0  INSTALLATION
+ 2.0  QUICK START
+ 3.0  BASIC FEATURES
+   3.1  Blob_Man Macro
+   3.2  Textures (*)
+   3.3  Origin Transformations
+   3.4  Positioning the Limbs 
+     3.4.1 Using Decalrations
+     3.4.2 Using Arrays
+     3.4.3 Blob_Man_Studio.pov and Hand_Studio.pov
+ 4.0  ADVANCED FEATURES
+   4.1  Head Macro
+   4.2  Torso Macro
+   4.3  Hand Macro
+   4.4  Feet Macro
+   4.5  Hair Macro      
+   4.6  Optional Parameters (*)
+   4.7  Image Maps
+ 5.0  COSTUME OBJECTS
+   5.1  Limb Objects
+   5.2  Costume Definition File
+ 6.0  HINTS & TIPS
+ 7.0  MISC INFO
+   7.1  Creating Face Image Maps
+   7.2  Creating Limb Image Maps
+   7.3  Bump Maps
+   7.4  Blob Man's Future
+   7.5  Known Problems
+ 8.0  HISTORY  (*)
+ 9.0  CONTACTING THE AUTHOR
+10.0  CREDITS
+
+******************************************************************************************
+0.0  INTRODUCTION
+******************************************************************************************
+Blob Man People is a set of macros to create humanoid figures, these figure can be Male or 
+Female and almost every moving body part can be positioned, right down to individual finger
+joints.
+
+The figures can be clothed by the use of externally created Costume Files.
+
+******************************************************************************************
+1.0  INSTALLATION
+******************************************************************************************
+Copy all *.INC, *.PNG, and *.CDF files to one of the directories (folders) in your 
+POV-Ray library path (as for example, the default include directory). If you don´t know 
+what they are, open your POVRAY.INI. If you have a PC running Windows95/98 or WindowsNT, 
+they probably look something like this: 
+
+Library_Path=C:\POV-Ray for Windows\include
+
+******************************************************************************************
+2.0  QUICK START
+******************************************************************************************
+Create a basic scene file similar to this : 
+
+// Cut Here
+
+global_settings {  assumed_gamma 2.2 }
+
+camera {  
+        location  <0, 1, -3.5>
+        direction 1.5*z
+        right     4/3*x
+        look_at   <0, 1,  0.0> 
+}
+
+sky_sphere
+{
+  pigment
+  {
+    gradient y
+    color_map { [0.0 color rgb <0.7,0.7,1.0>] [1.0 color blue 0.5] }
+  }
+}
+
+light_source
+{
+  0*x                     
+  color rgb <1,.9,.95>*1.5      
+  translate <-80, 40, -80>
+}
+
+
+cylinder {<0,0,0><0,-2,0> 20
+      pigment {checker pigment {rgb 0}, pigment {rgb 1} rotate y*16}
+}
+
+ 
+/***********************************************************
+The following code loads the Blob Man Include and Pose files
+and creates the one Male and one Female Figure
+************************************************************/
+#include "bmpeople.inc"
+
+Blob_Man(Male,2)
+object {BlobMan 
+        transform BMO_Foot_R
+        translate x*-.5
+}
+
+Blob_Man(Female,2)
+object {BlobMan 
+        transform BMO_Foot_R
+        translate x*.5
+}
+
+// Cut here
+
+******************************************************************************************
+3.0  BASIC FEATURES
+******************************************************************************************
+
+3.1  Blob_Man Macro
+===================
+Before the Blob_Man Macro can be called the "bmpeople.inc" file needs to be included.
+
+The syntax for calling the macro is as follows :-
+
+Blob_Man( Gender, Height )
+          
+Gender : [ FLOAT ] 0=Male, 1=Female (Note you can also use the identifiers Male or Female)
+Height : [ FLOAT ] This is the overall height of the figure in POV Units.
+
+Once called an object BlobMan is declared, this can now be positioned as required using the 
+Origin Transformations (refer to 3.3).
+
+3.2  Textures
+=============
+In its basic form Blob_Man declares two default textures, but these can be user defined,
+along with an optional texture.
+
+BM_Skin_Tex : This is the overall texture for the figure, if it is undeclared the default 
+              texture will be used.
+
+              Default: BM_Skin_Tex= texture {pigment{rgb <.9,.7,.6>}
+                                             finish{phong .3 phong_size 40}
+                                    }
+
+BM_Lip_Tex  : This is the texture for the figures lips, if it is undeclared the default 
+              texture will be used.
+                                      
+              Default: BM_Lip_Tex = texture {pigment{rgb <.7,.3,.2>}
+                                             finish{phong .3 phong_size 40}
+                                             normal{crackle .2 turbulence .7 scale .7}
+                                    }                                      
+
+BM_Nail_Tex : This is the texture for the Finger Nails, if it is undeclared the default
+              texture will be used.
+        	    
+        	  Default : BM_Nail_Tex = texture{ BM_Skin_Tex
+    		                                   finish { ambient -.25} 
+    		                          }
+              
+BM_Tooth_Tex: This is the texture used for the teeth, if it is undeclared the default texture 
+              will be used.
+
+              Default: BM_Tooth_Tex= texture { pigment {rgb 1}
+                                               finish {phong .9 phong_size 90}
+                                     }
+           
+The following textures do not have defaults set, it is up to you to set them before the macros 
+are called if you wish to use them.
+
+BM_Hair_Tex : This is the texture for the figures hair, if it is undecalred then the Hair_Col
+              <r,g,b> variable passed by the Blob_Man macro will be used to generate a 
+              randomised hair colour.
+
+BM_Eye_Shadow: This is the texture for putting colour on the Eye Lids, if it is undeclared then 
+               the Eye Lids will use BM_Skin_Tex.
+
+BM_Nipple_Tex: Texture of the nipples, BM_Skin_Tex will be used if undeclared.
+
+BM_Head_Tex : Texture used instead of BM_Skin_Tex for the Head
+BM_Neck_Tex : Texture used instead of BM_Skin_Tex for the Neck
+BM_Torso_Tex : Texture used instead of BM_Skin_Tex for the Torso
+BM_Abdomen_Tex : Texture used instead of BM_Skin_Tex for the Abdomen
+BM_Upperarm_R_Tex : Texture used instead of BM_Skin_Tex for the Right Upperarm
+BM_Upperarm_L_Tex : Texture used instead of BM_Skin_Tex for the Left Upperarm
+BM_Forearm_R_Tex : Texture used instead of BM_Skin_Tex for the Right Forearm
+BM_ForeArm_L_Tex : Texture used instead of BM_Skin_Tex for the Left Forearm
+BM_Hand_R_Tex : Texture used instead of BM_Skin_Tex for the Right Hand
+BM_Hand_L_Tex : Texture used instead of BM_Skin_Tex for the Left Hand
+BM_Thigh_R_Tex : Texture used instead of BM_Skin_Tex for the Right Thigh
+BM_Thigh_L_Tex : Texture used instead of BM_Skin_Tex for the Left Thigh
+BM_Calf_R_Tex : Texture used instead of BM_Skin_Tex for the Right Calf
+BM_Calf_L_Tex : Texture used instead of BM_Skin_Tex for the Left Calf
+BM_Foot_R_Tex : Texture used instead of BM_Skin_Tex for the Right Foot
+BM_Foot_L_Tex : Texture used instead of BM_Skin_Tex for the Left Foot
+
+
+In addition to these textures, there are also defineable Image Maps that is used for each part of 
+the body. Refer to section 4.7
+For tips on creating your own image maps refer to section 7.1
+
+3.3  Origin Transformations
+===========================
+The Blob_Man Macro declares the following Origin Transformations for you to locate the figure, 
+when used they locate the given point to <0,0,0>.
+
+    BMO_Foot_R     = Locates to the Right Foot                           
+    BMO_Foot_L     = Locates to the Left Foot                            
+    BMO_Toe_R      = Locates to the Right Toes                           
+    BMO_Toe_L      = Locates to the Left Toes                            
+    BMO_Knee_R     = Locates to the Right Knee                           
+    BMO_Knee_L     = Locates to the Left Knee                            
+    BMO_Hip_R      = Locates to the Right Hip                            
+    BMO_Hip_L      = Locates to the Left Hip                             
+    BMO_Abdomen_F  = Locates to the Front of the Abdomen                 
+    BMO_Abdomen_B  = Locates to the Back of the Abdomen                  
+    BMO_Abdomen_U  = Locates to the Underside of the Abdomen             
+    BMO_Abdomen_R  = Locates to the Right of the Abdomen                 
+    BMO_Abdomen_L  = Locates to the Left of the Abdomen                  
+    BMO_Torso_F    = Locates to the Front of the Torso (Chest)           
+    BMO_Torso_B    = Locates to the Back of the Torso                    
+    BMO_Torso_R    = Locates to the Right of the torso                   
+    BMO_Torso_L    = Locates to the Left of the Torso                    
+    BMO_Torso_T    = Locates to the Top of the Torso (Mid-Shoulders)     
+    BMO_Shoulder_R = Locates to the Right Shoulder                       
+    BMO_Shoulder_L = Locates to the Left Shoulder                        
+    BMO_Elbow_R    = Locates to the Right Elbow                          
+    BMO_Elbow_L    = Locates to the Left Elbow                           
+    BMO_Hand_R     = Locates to the Right Palm (Flat on y plane)         
+    BMO_Hand_L     = Locates to the Left Palm (Flat of y plane)          
+    BMO_Head_F     = Locates to the Front of the Head (Forehead)         
+    BMO_Head_B     = Locates to the Back of the Head                     
+    BMO_Head_T     = Locates to the Top of the Head                      
+    BMO_Ear_R      = Locates to the Right Ear                            
+    BMO_Ear_L      = Locates to the Left Ear                             
+    BMO_Nose       = Locates to the Nose                                 
+              
+eg. transform BMO_Foot_R     
+    This would relocate the BlobMan object to <0,0,0>
+
+If you do not use any of the above transformations then you will need to include the 
+following.
+
+    scale BM_Scale
+
+This is necessary to resize the figure to the correct size that you specified in the 
+Blob_Man macro, it is already included in the above transformations so isn't required if you
+stick with those.
+
+3.4  Positioning the Limbs
+==========================
+Blob Man is made up of 27 individually positionable parts.  Each one needs to be declared 
+before Blob_Man macro is called.
+
+There are two ways of defining the poses.
+
+3.4.1  Using Decalrations
+=========================
+The following variables need to be declared to alter the position of the relevant body part
+if undeclared the default value will be used.
+Note: If you are using multiple figures, you will need to re-declare these variables or
+      else all the figures will be in the same pose.
+
+
+BM_Head_Rot     Default: <0,0,0>     Head
+BM_Neck_Rot     Default: <0,0,0>     Neck (Note y is not used)
+BM_Torso_Rot    Default: <0,0,0>     Upper Torso (Chest)
+BM_RA_S2E       Default: <-8,0,-8>   Right Upper Arm
+BM_RA_E2W       Default: <8,0,-3>    Right Forearm 
+BM_LA_S2E       Default: <-8,0,8>    Left Upper Arm 
+BM_LA_E2W       Default: <8,0,3>     Left Forearm 
+BM_RL_H2K       Default: <8,0,-5>    Right Thigh 
+BM_RL_K2A       Default: <-8,0,3>    Right Lower Leg 
+BM_LL_H2K       Default: <8,0,5>     Left Thigh 
+BM_LL_K2A       Default: <-8,0,-3>   Left Lower Leg 
+BM_RF_Rot       Default: <8,0,-3>    Right Foot 
+BM_LF_Rot       Default: <8,0,3>     Left Foot 
+BM_RH_Rot       Default: <0,0,0>     Right Hand
+BM_LH_Rot       Default: <0,0,0>     Left Hand 
+
+BM_Toe_Angle    Default: <0,0,0>     Toe Angle x=left Foot z=Right Foot (Note y is not used)
+
+The Fingers are handled in a slightly different way, they are declared as 4 component vectors
+<x,y,z,t>
+   x=Angle of 1st joint of the finger nearest the palm
+   y=Angle of 2nd joint of the finger
+   z=Angle of 3rd joint of the finger
+   t=Side to side movement angle (Range: -10 to 10)
+
+Right Hand Fingers                             
+BM_RFP_Pos      Default: <5,45,5,0>   Pinky   
+BM_RFR_Pos      Default: <10,30,5,0>  Ring 
+BM_RFM_Pos      Default: <5,15,5,0>   Middle
+BM_RFI_Pos      Default: <0,10,0,0>   Index
+BM_RFT_Pos      Default: <0,-10,5,10> Thumb
+
+Left Hand Fingers
+BM_LFP_Pos      Default: <5,45,5,0>   Pinky
+BM_LFR_Pos      Default: <10,30,5,0>  Ring
+BM_LFM_Pos      Default: <5,15,5,0>   Middle
+BM_LFI_Pos      Default: <0,10,0,0>   Index
+BM_LFT_Pos      Default: <0,-10,5,10> Thumb
+
+If you intend to use multiple figures in a scene each with differing poses, or if you want 
+to use the same pose in different scenes, then you should declare these variables in a
+seperate file, then include it just before you call the Blob_Man macro.
+
+3.4.2  Using Arrays
+===================
+The second method of defining the positions of the body parts is to use an array.
+For more information about arrays refer to the POV-Ray Documentation.
+
+The following Arrays will need to be defined before the Blob_Man Macro is called.
+
+  BM_Pose  = array[n][17] (Where n is the number of entries in the array)
+                           All entries are 3 component vectors <x,y,z>
+
+   {BM_Head_Rot,        Head                     
+    BM_Neck_Rot,        Neck (Note y is not used)
+    BM_Torso_Rot,       Upper Torso (Chest)      
+    BM_RA_S2E,          Right Upper Arm          
+    BM_RA_E2W,          Right Forearm            
+    BM_LA_S2E,          Left Upper Arm           
+    BM_LA_E2W,          Left Forearm             
+    BM_RL_H2K,          Right Thigh              
+    BM_RL_K2A,          Right Lower Leg          
+    BM_LL_H2K,          Left Thigh               
+    BM_LL_K2A,          Left Lower Leg           
+    BM_RF_Rot,          Right Foot               
+    BM_LF_Rot,          Left Foot                
+    BM_Toe_Angle,       Toe Angle x=left Foot z=Right Foot (Note y is not used)
+    BM_RH_Rot,          Right Hand               
+    BM_LH_Rot,          Left Hand       
+    <0,0,1>             x=Left Hand Array Entry z=Right Hand Array Entry (See Below)
+   }                      (Note y is not used)
+
+
+  BM_Hands = array[n][5] (Where n is the number of entries in the array)
+                         All entries are 4 component vectors <x,y,z,t>
+                           x=Angle of 1st joint of the finger nearest the palm
+                           y=Angle of 2nd joint of the finger
+                           z=Angle of 3rd joint of the finger
+                           t=Side to side movement angle (Range: -10 to 10)
+  { 
+   BM_ FP_Pos,         Pinky  
+   BM_ FR_Pos,         Ring   
+   BM_ FM_Pos,         Middle 
+   BM_ FI_Pos,         Index  
+   BM_ FT_Pos          Thumb  
+  }                         
+
+
+As you can have many entries in the arrays, before the Blob_Man macro is called you will 
+need to specify the Array Entry Number
+
+    #declare BM_PoseNo= Arry Entry Number (Remember that the first entry in an array is 0)
+
+If you have used a figure that has been positioned using Arrays, and then you want to 
+position the body parts of a new figure using the declaration method (Section 3.4.1)
+you will need to re-declare BM_PoseNo to a value of -1.
+
+i.e.
+  #declare BM_PoseNo=-1;
+
+Included in the distribution pack, you will find three includes "bm_pose.inc" and "bm_hands.inc"
+ are sample arrays containing 12 (0-11) pre-defined poses, and 13 (0-12) pre-defined hand
+positions, and "bm_hair.inc" contains arrays for 5 (0-4) pre-defined Hair styles.
+
+3.4.3  Blob_Man_Studio.pov and Hand_Studio.pov
+==============================================  
+To aid you in the creation of the Pose files needed for Blob Man, there are two Scene Files
+that you can use, "Blob_Man_Studio.pov" and "Hand_Studio.pov"
+
+Blob_Man_Studio.pov allows you to view the pre-defined poses included in "bm_pose.inc" as
+    well as create your own, it shows six views of the figure (Left, Front, Right, Back, Top 
+    and Underneath), you can change each of the variables and view the results (it doesn't take 
+    long to render at 320 x 240 No AA and you can easily see if the pose is correct).
+    Part of this scene creates two external files "bmarray.txt" and "bmdaclar.txt", when you 
+    are happy with the pose rename the file you wish to use
+    "bmarray.txt" defines the BM_Pose array with one entry (0) and BM_Hands array with
+     two entrie (0-1) and the Arrays for defining the Hair Style.
+    "bmdeclar.txt" contains all the declarations needed to define the pose including Hair.
+
+Hand_Studio.pov allows you to view the pre-defined hand positions included in "bm_hands.inc"
+    as well as create your own, it shows six views of a hand, you can alter each finger
+    and once you are happy with the results, rename the file "bmhand.txt" which contains
+    a BM_Hand Array of one entry (0).
+
+******************************************************************************************
+4.0  ADVANCED FEATURES
+******************************************************************************************
+Each of the macros that make up Blob Man can each be called individually if required.  This
+could be useful if you only wanted to use body parts individually.
+
+Note: if you use these macros in this way, you will need to scale them yourself BM_Scale will
+not work, nor will the Origin Transformations. 
+
+Call all of these macros from within an object{} definition.  Skin_Tex and Lip_Tex need to be 
+decalred before the macros are called or the default textures will be used (see section 3.2)
+
+4.1  Head Macro
+===============          
+The syntax for using this macro is as follows :
+
+bmhead()
+
+The following variables effect the head
+
+BM_Head_Rot        Head                          
+BM_Neck_Rot        Neck (Note y is not used)     
+BM_Torso_Rot       Upper Torso (Chest)           
+
+4.2  Torso Macro
+================
+The syntax for using this macro is as follows :
+
+bmtorso()
+
+The following variables effect the torso (including the abdomen)
+
+BM_Torso_Rot       Upper Torso (Chest)  
+BM_RA_S2E          Right Upper Arm      
+BM_RA_E2W          Right Forearm        
+BM_LA_S2E          Left Upper Arm       
+BM_LA_E2W          Left Forearm         
+BM_RL_H2K          Right Thigh          
+BM_RL_K2A          Right Lower Leg      
+BM_LL_H2K          Left Thigh           
+BM_LL_K2A          Left Lower Leg       
+
+4.3  Hand Macro
+===============
+The syntax for using this macro is as follows : 
+Call this macro twice, once for each hand.
+
+bmhand( Hand )
+
+Hand     = [ FLOAT ] Right Hand = -1 / Left Hand = 1
+
+The following variables effect the hands
+
+BM_Torso_Rot,       Upper Torso (Chest) 
+BM_RA_S2E,          Right Upper Arm     
+BM_RA_E2W,          Right Forearm       
+BM_LA_S2E,          Left Upper Arm      
+BM_LA_E2W,          Left Forearm        
+BM_RH_Rot,          Right Hand               
+BM_LH_Rot,          Left Hand       
+BM_RFP_Pos          Right Pinky Finger
+BM_RFR_Pos          Right Ring Finger     
+BM_RFM_Pos          Right Middle Finger  
+BM_RFI_Pos          Right Index Finger  
+BM_RFT_Pos          Right Thumb  
+BM_LFP_Pos          Left Pinky Finger  
+BM_LFR_Pos          Left Ring Finger    
+BM_LFM_Pos          Left Middle Finger 
+BM_LFI_Pos          Left Index Finger  
+BM_LFT_Pos          Left Thumb         
+
+4.4  Feet Macro
+===============
+The syntax for using this macro is as follows : 
+
+bmfeet()
+
+The following variables effect the feet
+
+BM_Torso_Rot       Upper Torso (Chest)
+BM_RL_H2K          Right Thigh        
+BM_RL_K2A          Right Lower Leg    
+BM_LL_H2K          Left Thigh         
+BM_LL_K2A          Left Lower Leg     
+BM_RF_Rot          Right Foot                                              
+BM_LF_Rot          Left Foot                                               
+BM_Toe_Angle       Toe Angle x=left Foot z=Right Foot (Note y is not used) 
+
+
+4.5  Hair Macro
+===============
+The syntax for using this macro is as follows : 
+
+bmhair()
+  
+The following variables effect the hair
+
+BM_Head_Rot        Head                          
+BM_Neck_Rot        Neck (Note y is not used)     
+BM_Torso_Rot       Upper Torso (Chest)     
+BM_Hair_On         Hair (1) or No Hair (0)
+BM_Hair_Rot        Rotation Vector for Hair                      
+BM_Hair_Arch       Arch hairline over head inline with ears (1) or Not (0)
+BM_Hair_Thck       Thickness of Hair (Best settings 0.15 to 0.5) 
+BM_Hair_Line       Height of Hairline (Best settings 3 to 6)     
+BM_Hair_LDpth      Hairline profile Depth (Range : 0 to 1)       
+BM_Hair_Wght       Hair Weight (Range: 0.005 to 0.05)            
+BM_Hair_Hght       Hair Height (Range: 1 to 2)                   
+BM_Hair_Length     Hair Length (Range: 1 to 20)                  
+BM_Hair_Curl       Curliness (Range 0-Straight to 0.1-Curly)     
+
+
+4.6  Optional Parameters
+========================
+There are a few optional parameters available that will change the way Blob Man appears,
+these variables must be declared before the Macro's are called. (# = Default Setting)
+
+BM_Ears   = [ FLOAT ] 2 = Normal Ears (#)
+                      1 = Replace ears with small lumps as if under a swimming cap
+                      0 = No ears
+
+BM_Eyes   = [ FLOAT ] 1 = Normal Eyes (#) 
+                      0 = No Eyes
+
+BM_Face   = [ FLOAT ] 1 = Normal Face Structure (#) 
+                      0 = Removes Nose and Lips
+
+BM_R_Foot = [ FLOAT ] 1 = Normal Right Foot (#)  
+                      0 = Missing Right Foot                       
+
+BM_L_Foot = [ FLOAT ] 1 = Normal Left Foot (#)  
+                      0 = Missing Left Foot
+
+BM_R_Hand = [ FLOAT ] 1 = Normal Right Hand (#) 
+                      0 = Missing Right Hand
+
+BM_L_Hand = [ FLOAT ] 1 = Normal Left Hand (#) 
+                      0 = Missing Left Hand
+
+BM_Torso_Mass = [ FLOAT ] 1 = Normal Torso (#) 
+                          0 = No Torso 
+                         -1 = Guides
+
+BM_Head_Mass = [ FLOAT ] 1 = Normal Head (#)
+                         0 = No Head 
+                        -1 = Guides
+
+BM_Jaw = [ FLOAT ]  Range: 0 - 1  0= Closed, 1=Open. Default = 0.5   
+
+BM_Mouth = [ FLOAT ] Mouth Size Range: 0(Small) to 1(Large) Default = 1;
+
+BM_MouthShape = [ FLOAT ] Range: -1 - 1 Turns the corners of the mouth
+                                        +Up / -Down Default= 0.5
+
+BM_Teeth = [ FLOAT ] 0 = No Teeth
+                     1 = Teeth (#)
+
+BM_Jowls = [ FLOAT ] Range 0 - 2 : Amount of mass added to sides of jaw, 
+                                   Jowls. Default=0   
+
+BM_Nose = [ FLOAT ] Range 0 - 1.25 : Size of Nose. Default = 0.5 
+
+BM_Navel = [ FLOAT ] -1 = Inverted Navel 
+                      0 = No Navel (#)
+                      1 = Protruding Navel
+                      
+BM_Nipples = [ FLOAT ] 0 = No Nipples (#)
+                       1 = Nipples  
+
+BM_Flex = [ FLOAT ] (Male Figure Only) When the Torso is rotated some of the 
+                    muscles flex in the abdomen, this makes Costume Definition difficult 
+                    if there are objects located near these muscles.
+                    1 = Flex On (#)
+                    0 = Flex Off
+
+BM_TShirt = [ FLOAT ] (Female Figures Only) This adds extra mass between the breasts to
+                      give the impression that the figure is wearing a T-Shirt.  
+                      Useful for Costume Definition
+                      1 = On
+                      0 = Off (#)
+
+BM_EyeCol = [ R,G,B ] This is the Eye Colour vector Default= <.22,.69,.87>
+
+BM_EyeLids = [ X,Y,Z ] X=Left EyeLid Range 0 (Open) - 1 (Closed)
+                       Y=Eye Rotation Angle (Left to Right)
+                       Z=Right EyeLid Range 0 (Open) - 1 (Closed)
+                       Default = <0,0,0>
+
+BM_Nails = [ FLOAT ] 1 = Finger Nails (#)
+                     0 = No Finger Nails
+
+BM_Map_R_Finger = [ FLOAT ] 1 = Apply Right Hand Image Map to Fingers (#)
+                            0 = Do Not Apply Right Hand Image Map to Fingers
+                            
+BM_Map_L_Finger = [ FLOAT ] 1 = Apply Left Hand Image Map to Fingers (#)
+                            0 = Do Not Apply Left Hand Image Map to Fingers                            
+
+The following parameters all have the same options
+
+BM_R_Upperarm_Mass : Right Upper Arm =  
+BM_L_Upperarm_Mass : Left Upper Arm  =
+BM_R_Forearm_Mass  : Right Forearm   = [ FLOAT ]  1 = Normal (#) 
+BM_L_Forearm_Mass  : Left Forearm    =            0 = Amputated   
+BM_R_Thigh_Mass    : Right Thigh     =           -1 = Guides      
+BM_L_Thigh_Mass    : Left Thigh      =          
+BM_R_Calf_Mass     : Right Calf      =
+BM_L_Calf_Mass     : Left Calf       =
+
+BM_Guide_Rad = [ FLOAT ] When using Guide Settings (-1) above this is the radius of
+                         cylindrical sections.  Default = 2
+
+BM_Hair_Seed = [ FLOAT ] Random seed for the hair macro. Default = 77
+
+BM_PoseNo = [ FLOAT ] This is used in conjunction with BM_Pose Array it specifies
+                      which Array entry to use for the pose.
+                      -1 = Do not Use Arrays (#) This must be reset if you are switching
+                                                 between array and declarations in one scene
+                                                 refer to section 3.4.2
+                       0-... = Array Entry Number
+
+BM_Pose_RHand = [ FLOAT ] If you are using the BM_Pose Array when this is set to -1 the
+                          Right hand specified by the Pose Array Entry will be used, however
+                          if it is set to >=0 then the Hand Positions specified in that 
+                          entry of the BM_Hands Array will be used.
+                          If you are not using the BM_Pose Array then when set to -1 the
+                          figure will use the finger positions that have been declared
+                          but if it is set >=0 then the Hand Positions specified in that 
+                          entry of the BM_Hands Array will be used. 
+                          Default = -1 (Arrays Not Used)
+
+BM_Pose_LHand = [ FLOAT ] If you are using the BM_Pose Array when this is set to -1 the
+                          Left hand specified by the Pose Array Entry will be used, however
+                          if it is set to >=0 then the Hand Positions specified in that 
+                          entry of the BM_Hands Array will be used.
+                          If you are not using the BM_Pose Array then when set to -1 the
+                          figure will use the finger positions that have been declared
+                          but if it is set >=0 then the Hand Positions specified in that 
+                          entry of the BM_Hands Array will be used.         
+                          Default = -1 (Arrays Not Used)
+
+BM_HairStyle = [ FLOAT ] If you are using Arrays for Hair Settings then this represents the
+                         Array Entry Number for the Hairstyle.
+                         Derfault = -1 (Arrays Not Used)
+                         
+
+4.7  Image Maps
+===============
+In addition to the basic Skin, Lip and Nail textures (section 3.2), image maps can also be applied
+to each of the Body parts.
+
+The image maps need to be in PNG format, with the alpha channel being used for transparent 
+areas.
+
+The following variables need to be set prior to the macros being called, the image map files 
+need to be in the POV-Ray library path, or the same folder as the scene file.
+
+Face_IMap       = [ "FILENAME.PNG" ] Image map to be used for the Head. 
+Neck_IMap       = [ "FILENAME.PNG" ] Image map to be used for the Neck. 
+Torso_IMap      = [ "FILENAME.PNG" ] Image map to be used for the Torso. 
+Abdomen_IMap    = [ "FILENAME.PNG" ] Image map to be used for the Abdomen. 
+Upperarm_R_IMap = [ "FILENAME.PNG" ] Image map to be used for the Right Upperarm.
+Upperarm_L_IMap = [ "FILENAME.PNG" ] Image map to be used for the Left Upperarm.
+Forearm_R_IMap  = [ "FILENAME.PNG" ] Image map to be used for the Right Forearm.
+Forearm_L_IMap  = [ "FILENAME.PNG" ] Image map to be used for the Left Forearm.
+Hand_R_IMap     = [ "FILENAME.PNG" ] Image map to be used for the Right Hand.
+Hand_L_IMap     = [ "FILENAME.PNG" ] Image map to be used for the Left Hand.
+Thigh_R_IMap    = [ "FILENAME.PNG" ] Image map to be used for the Right Thigh.
+Thigh_L_IMap    = [ "FILENAME.PNG" ] Image map to be used for the Left Thigh.
+Calf_R_IMap     = [ "FILENAME.PNG" ] Image map to be used for the Right Calf (Lower Leg).
+Calf_L_IMap     = [ "FILENAME.PNG" ] Image map to be used for the Left Calf (Lower Leg).
+Foot_R_IMap     = [ "FILENAME.PNG" ] Image map to be used for the Right Foot.
+Foot_L_IMap     = [ "FILENAME.PNG" ] Image map to be used for the Left Foot.
+
+Bump Maps can also be difined in the same way, however these will only be used if the above
+image maps are defined.
+
+The bump maps need to be in PNG format.
+
+The following variables need to be set prior to the macros being called, the bump map files 
+need to be in the POV-Ray library path, or the same folder as the scene file.
+
+Face_BMap       = [ "FILENAME.PNG" ] Bump map to be used for the Head. 
+Neck_BMap       = [ "FILENAME.PNG" ] Bump map to be used for the Neck. 
+Torso_BMap      = [ "FILENAME.PNG" ] Bump map to be used for the Torso. 
+Abdomen_BMap    = [ "FILENAME.PNG" ] Bump map to be used for the Abdomen. 
+Upperarm_R_BMap = [ "FILENAME.PNG" ] Bump map to be used for the Right Upperarm.
+Upperarm_L_BMap = [ "FILENAME.PNG" ] Bump map to be used for the Left Upperarm.
+Forearm_R_BMap  = [ "FILENAME.PNG" ] Bump map to be used for the Right Forearm.
+Forearm_L_BMap  = [ "FILENAME.PNG" ] Bump map to be used for the Left Forearm.
+Hand_R_BMap     = [ "FILENAME.PNG" ] Bump map to be used for the Right Hand.
+Hand_L_BMap     = [ "FILENAME.PNG" ] Bump map to be used for the Left Hand.
+Thigh_R_BMap    = [ "FILENAME.PNG" ] Bump map to be used for the Right Thigh.
+Thigh_L_BMap    = [ "FILENAME.PNG" ] Bump map to be used for the Left Thigh.
+Calf_R_BMap     = [ "FILENAME.PNG" ] Bump map to be used for the Right Calf (Lower Leg).
+Calf_L_BMap     = [ "FILENAME.PNG" ] Bump map to be used for the Left Calf (Lower Leg).
+Foot_R_BMap     = [ "FILENAME.PNG" ] Bump map to be used for the Right Foot.
+Foot_L_BMap     = [ "FILENAME.PNG" ] Bump map to be used for the Left Foot.
+
+The following options can also be set, these only effect the above image maps.
+
+BM_Map_Finish = finish {} : Set the finish you wish to apply to the image maps.  
+                            There is no default finish.
+
+BM_Map_Normal = normal {} : Set the normal you wish to apply to the image maps.  
+                            There is no default normal.
+
+BM_Bump_Map_Size = [ FLOAT ] Bump Map Size, Default = 0.25
+
+Refer to POV-Ray Documentation for more information on image and bump maps.
+
+******************************************************************************************
+5.0  COSTUME OBJECTS
+******************************************************************************************
+
+5.1  Limb Objects
+=================           
+The following parameters are used to create clothing and props for Blob Man, they need to
+be declared prior to the macros being called, and they must all be valid objects located 
+around <0,0,0>.
+
+BM_Head_Object        = Objects located about the Head.       
+BM_Neck_Object        = Objects located about the Head.       
+BM_Torso_Object       = Objects located about the Torso.       
+BM_Abdomen_Object     = Objects located about the Abdomen.       
+BM_Upperarm_R_Object  = Objects located about the Right Upperarm. 
+BM_Upperarm_L_Object  = Objects located about the Left Upperarm. 
+BM_Forearm_R_Object   = Objects located about the Right Forearm.  
+BM_Forearm_L_Object   = Objects located about the Left Forearm.  
+BM_Hand_R_Object      = Objects located about the Right Hand.
+BM_Hand_L_Object      = Objects located about the Left Hand. 
+BM_Thigh_R_Object     = Objects located about the Right Thigh.
+BM_Thigh_L_Object     = Objects located about the Left Thigh.
+BM_Calf_R_Object      = Objects located about the Right Calf.
+BM_Calf_L_Object      = Objects located about the Left Calf.
+BM_Foot_R_Object      = Objects located about the Right Foot.
+BM_Foot_L_Object      = Objects located about the Left Foot.
+
+Note : If no texture is given to these objects they will adopt the Skin_Tex texture plus 
+       any image maps assigned to that limb.    
+
+The Objects defined above will be included even if the Mass parameters (i.e. BM_Torso_Mass etc)
+are set in such a way as to be missing, this is useful, if for example you wished to give
+Blob_man a "Peg Leg".  It could also be possible to create a Skeleton, by defining all the 
+bones as objects, and then removing the original body parts by setting their Mass=0
+
+5.2  Costume Definition File
+============================
+The best way to define how blob man will look is to create a Costume Definition File (.cdf)
+this is basically an include file with all the optional settings declared.  The advantage 
+of using this method, is that the same CDF can be used in multiple scenes and likewise 
+multiple CDF's can be used in the same scene.  All that needs to be done is include the 
+correct CDF before the macros are called.
+
+eg.
+#include "bmpeople.inc"
+#include "bm_pose.inc"
+
+#include "example1.cdf"
+Blob_Man(0,2)
+
+#include "example2.cdf"
+Blob_Man(1,1.8)
+
+etc.                  
+
+Included in the Blob Man package are sample .cdf files; "layout.cdf" lists all the optional 
+parameters and their settings, "sample.cdf" and "croft.cdf" are basic Costume Definition File
+
+More Costume Definition Files are available on from CDF Library (see section 9.0)
+
+******************************************************************************************
+6.0  HINTS & TIPS
+******************************************************************************************
+To help in the positioning of Blob_Man, there is a DeBug variable that can be set, this 
+generates visible locators to the ends of Blob Mans limbs, note that this will only work
+if any limb objects created contain the current object as part of the definition i.e.
+  #declare BM_Head_Object= union { object{BM_Head_Object}
+                                Costume Objects ...
+                                .....
+                        }
+See "sample.cdf" for further examples.
+
+When testing scenes avoid using hair, as the parse time increases considerably, if you
+declare a variable eg. HairTest=0, then multiply Hair setting by this number you only need 
+to set HairTest=1 to turn the hair back on for all figures.
+
+eg. 
+    #decalre HairTest=0 // 1= Hair On 0=Hair Off
+    #include "bm_hair.inc" // Hair Arrays Already Defined
+    #declare BM_HairStyle=2*HairTest
+
+    Blob_Man (0,2)                  
+    
+    #declare BM_HairStyle=3*HairTest
+    Blob_Man (1,1.8)
+
+
+Use Body_Part_Viewer.pov in conjunction with a CDF file to model clothing/props for 
+Blob Man. (see "HOW2CDF.txt" for more information)
+
+******************************************************************************************
+7.0  MISC INFO
+******************************************************************************************
+
+7.1  Creating Face Image Maps
+=============================
+The image maps used for Blob Mans face are PNG format which uses the Alpha Channel.  
+Use an Image Editor that allows you to edit the Alpha channel (eg. Paint Shop Pro, PhotoShop)
+then create the areas that you wish to be mapped, in the alpha channel.  In the main image 
+roughly colour the same areas the colours you want, it doesn't matter how accurate you are
+as the aplha channel will make unwanted areas transparant.
+
+7.2  Creating Limb Image Maps
+=============================
+As with the face image maps, these need to be in PNG format with the Alpha channel being 
+used for transpancy.  There are no sample limb image maps, but below are the dimensions for
+the different limbs:
+
+Head, Neck, Torso, Abdomen, Hands, Feet  = 1:1 (eg. 600 Wide x 600 High)
+Upper Arms, Forearms, Thighs, Calves     = 1:2 (eg. 300 Wide x 600 High)
+
+Note about hands :
+    Because the Image maps are applied after the fingers have been positioned, if the
+    image map has a pattern, it will not look the same if the finger positions are changed.
+    
+    BM_Map_R_Finger and BM_Map_L_Finger can be set to 0 and this will not map the image map
+    onto the Fingers (1 is the default)    
+    
+7.3  Bump Maps
+==============    
+Bump maps should be Grayscale and in PNG format.  Alpha Channel is not used for Bump Maps.
+They should be the same scale as the Image Maps
+
+7.4  Blob Man's Future
+======================
+Here are just a few ideas I have for improving Blob Man.
+
+   * Different ages ( 2 Years, 6 Years, 12 Years)
+   * A More configurable face model.
+   * An optional Hair Macro
+   * An animation system ( I will probably need help with this, any offers...)
+   
+7.5  Known Problems
+===================
+At this time I am unaware of any major problems, except that old CDF Files need to be 
+rewritten to be useable by this version, as will any Pose Files created for earlier versions.
+
+******************************************************************************************
+8.0  HISTORY
+******************************************************************************************
+v4.2                    Corrected bug in Hand Origin Transformations, corrected bug in Eye 
+                        Rotations, corrected lower teeth position (so they are now visible). 
+                        Corrected code that produced warning messages (due to testing with 
+                        -gw setting).
+
+v4.1    21 Apr 2000     Added Body Part Textures to replace Skin_Tex if required, added a 
+                        navel (in or out), added nipples and nipple textures.  Changed the 
+                        eyes, now uses Toni Bratincevic's "eye_macro.inc".
+
+v4.0    09 Apr 2000     Major Release.
+                        Redesigned and renamed Macros, added Gender, changed the hands and 
+                        feet, redesigned the torso, torso and abdomen now seperate to allow
+                        torso movement, improved the Origin transformations, added scale
+                        option to main macro, remodelled the head, plus many other changes.
+                        This version is no longer compatible with older versions.
+
+v3.6    01 Mar 2000     Remodelled the Chest, there is now an optional parameter to switch
+                        between the old and new style, for compatability the original style 
+                        is the default.  Added nose size and eyebrow ridge options.  Added
+                        a section to this doc about Array formats.  Included a very basic
+                        "How to.." document on CDF creation ("HOW2CDF.TXT") 
+
+v3.5    25 Jul 1999     Added extra modelling detail to head.  New optional variables
+                        available for Teeth, Jaw and Jowls.
+
+v3.0    06 Jul 1999     Added Limb Objects to allow creation of clothing and props.
+                        Added image and bump maps to all limbs.
+                        Maintained Macro Settings for backwards compatibilty with older
+                        pose files.
+                        Remodeled Nose and lips slightly.
+                        Included "sample.cdf" and "layout.cdf"
+
+v2.0    23 Apr 1999     Remodeled the head, and added variable image_map textures for the 
+                        face, eye lid variables in head macro now have a range of 0-1 and 
+                        are can be set for each eye, so winking is possible.
+                        Remodeled the feet.
+                        Added mass to the arms and legs.
+                        Remodeled the hands and articulated the fingers, hand macro now 
+                        needs to be called twice, once for each hand.
+                        Externally defined skin texture.
+                        Added a Blob_Man Macro to create a complete figure from a given 
+                        pose number as defined in a Pose File 
+                        Rewrote the motion mechanics to make the code more readable.
+                        Generally cleaned up the code.
+                        Generated more Pre-Defined poses
+
+v1.0    09 Apr 1999     Initial release.
+
+v0.0    March  1999     Govert Zoethout published his source files.
+                        Original Macros had static arms and no hands or legs, and was in 
+                        his native language (which I can't speak)
+
+******************************************************************************************
+9.0  CONTACTING THE AUTHOR
+******************************************************************************************
+If you wish to contact me with bug reports, bug fixes, criticisms, comments, suggested 
+improvements, questions, etc. you can reach me by email at:
+
+   E-mail  : houston.graphics@iname.com
+   
+   ICQ#    : 8770407
+
+   Homepage: http://welcome.to/HoustonGraphics
+             -or-
+             http://members.xoom.com/HoustonGraph
+
+If you do make any improvements to these macros please let me know, so that I can include
+them in future releases.
+
+Also if you design any Costume Definition Files that you would like to share, please send 
+them and I will include them in the CDF Library.
+
+******************************************************************************************
+10.0  CREDITS
+******************************************************************************************
+Thanks go to the following :-
+
+POV-Ray Team for producing such fantastic software, and FREE too !!!!
+
+Govert Zoethout who without his original model, this work would never have come about.
+
+Yasunari Iwanaga who created his own lady include file which I drew heavily on for
+the version 4.0 release.
+
+Toni Bratincevic for his eye macro.
+
+Chris Colefax for the template of this readme file, producing excellent include files,
+and inspiring me to contribute to the POV-Ray community.
+
+All the helpful POV-Ray users around the world, who frequent the POV-Ray Newsgroups.
+( news.povray.org )
+
+Suggestions: Jo Grant for the idea of Body Part Textures
+             Bob Hughes ? for the Belly Button Idea
+  
+******************************************************************************************
+POV-Ray(tm) and Persistence of Vision(tm) are registered trademarks of the POV-Ray Team(tm)

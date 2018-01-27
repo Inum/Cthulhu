@@ -39,8 +39,8 @@ global_settings { assumed_gamma 1.0 }
 
 // Camera 
 #declare Cam0 = camera{ angle 65
-                        location <-0.1, 0+0.007*clock, -0.3-0.02*clock>
-                        look_at <-0.22, -0.5+0.007*clock, 0.31> } //end     
+                        location <-0.5-0.009*clock, 1.0, -2+0.02*clock>
+                        look_at <-0.22, 0.08+0.007*clock, 0.31> } //end     
 
 #declare Cam1 = camera{ angle 65
                         location <-2, 2, -1>
@@ -183,7 +183,7 @@ intersection{
 object{ Duck 
         scale 0.05 
         rotate< 0, -60, 0> 
-        translate <-0.22, -0.5+0.007*clock, 0.31> } // end
+        translate <-0.22, 0.08+0.007*clock, 0.31> } // end
 
 #declare pt = 0;
 #declare r = 0;
@@ -247,7 +247,7 @@ texture { pigment{ rgb<0,0,0>}}
 
 #declare 
 BM_Skin_Tex= texture{Jade}
-#declare BM_RA_E2W = <30+clock*0.5,0,0>;      
+#declare BM_RA_E2W = <90+clock*0.5,0,0>;      
 #declare BM_RH_Rot = <0, 90, 0>;
 
 Blob_Man(Male,80)

@@ -1,4 +1,4 @@
-// PoVRay 3.7 Scene File "tub.pov"
+    // PoVRay 3.7 Scene File "tub.pov"
 // author: Lars Henning Kayser, November-2017
 // email: henningkayser@mail.de
 // description: A simple animated bathroom scene with a duck floating in a tub.
@@ -183,7 +183,7 @@ intersection{
 object{ Duck 
         scale 0.05 
         rotate< 5*sin(step), -60, 5*cos(step)> 
-        translate <-0.22, 0.08+0.01*cos(step), 0.31> } // end
+        translate <-0.22, -2+0.007*clock, 0.31> } // end
 
 #declare pt = 0;
 #declare r = 0;
@@ -245,8 +245,9 @@ texture { pigment{ rgb<0,0,0>}}
 
 
 
-#declare BM_Skin_Tex= texture{Jade}
-#declare BM_RA_E2W = <100+clock*5,0,0>;      
+#declare 
+BM_Skin_Tex= texture{Jade}
+#declare BM_RA_E2W = <50+clock*5,0,0>;      
 #declare BM_RH_Rot = <0, 90, 0>;
 
 Blob_Man(Male,80)
@@ -259,10 +260,12 @@ object{head scale 0.3
             translate <8, 150, -10>
             }
 
-object {BlobMan    
+object {BlobMan 
+   
         transform BMO_Foot_R
         translate y*-1.5
 }
 scale 0.04
 translate <0, -2, 0.2>
 rotate<0, 60, 0>}
+
