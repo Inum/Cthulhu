@@ -16,12 +16,12 @@ global_settings{ assumed_gamma 1.0 }
 #local step=2 * pi * progress;
 
 
-#declare fac=function(v){v * min(1, max(0.3, 1 - max(0, clock - 0.05*final_clock)))}
+#declare fac=function(v){v * min(1, max(0.3, 1 - max(0, clock - 0.3*final_clock)))}
 
 // Camera 
 #declare Cam0 = camera{ angle 65
                         location <fac(6) - progress, fac(3), -fac(5) + progress>
-                        look_at <0, 10 * max(0, 0.1*final_clock - clock), 0>} //end
+                        look_at <0, 3 * max(0, 0.3*final_clock - clock), 0>} //end
 
 #declare Cam1 = camera{ angle 65
                         location <3, 3, -5>
