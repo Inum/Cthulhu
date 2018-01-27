@@ -99,10 +99,10 @@ difference {
 object {duck 
  scale 0.05
  //translate <-cos(clock) * r(4), - 2 * clock / final_clock, sin(clock) * r(4)>
- rotate< 0, -progress * progress * 1440, 0>
+ rotate< sin(clock), -progress * progress * 3000, cos(clock)>
  translate <-cos(clock) * r(3.5), - 2.1 * clock / duck_gone_clock, sin(clock) * r(3.5)>
  #if (clock > duck_gone_clock)
-     translate <0, - 2 - clock * 0.05, 0>
+     translate <0, - 2.1 - (clock-duck_gone_clock) * 0.01, 0>
  #end
  no_shadow
 
