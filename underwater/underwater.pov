@@ -51,7 +51,7 @@ light_source {<100,1000,1000>, 1.5}
 // bright daylight
 light_source {<-100,1000,-1000>, <.33,.5,.6> shadowless}
 
-camera {location <0,-2.5,-5 + clock*0.5> look_at <0,0,0>}
+camera {location <0,3-clock,-5> look_at <0,0,0>}
 
 #declare pt = 0;
 #declare r = 0;
