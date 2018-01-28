@@ -76,7 +76,7 @@ cubic_spline
 object{ duck 
         scale 0.05 
         rotate< 0, -60, 0> 
-        translate <-0.22, -0.5+0.009*clock, 0.31> } // end
+        translate <-0.25, -0.5+0.009*clock, 0.31> } // end
         
 //cthulhu
 
