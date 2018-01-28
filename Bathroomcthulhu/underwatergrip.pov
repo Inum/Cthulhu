@@ -3,7 +3,7 @@
 #include "glass.inc"
 #include "skies.inc"
 #include "textures.inc"
-#include "duck/duck.inc"
+#include "rubberduck.inc"
 
 //human model
 #include "bmpeople.inc"
@@ -73,7 +73,7 @@ cubic_spline
 
 
     
-object{ Duck 
+object{ duck 
         scale 0.05 
         rotate< 0, -60, 0> 
         translate <-0.22, -0.5+0.009*clock, 0.31> } // end

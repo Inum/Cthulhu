@@ -21,7 +21,7 @@
 #include "../include/shapes3.inc"
 
 // duck model originally taken from: http://www.oyonale.com/modeles.php?lang=en&page=53
-#include "duck/duck.inc"
+#include "rubberduck.inc"
 
 // A bunch of included materials which might or might not be necessary
 // (didn't have the patience to check which one caused)
@@ -180,7 +180,7 @@ intersection{
 
 // ------- DUCK 
 // TODO: (optional) Extract normal function of iso surface to use for duck floating animation
-object{ Duck 
+object{ duck 
         scale 0.05 
         rotate< 5*sin(step), -60, 5*cos(step)> 
         translate <-0.22, -2+0.007*clock, 0.31> } // end
